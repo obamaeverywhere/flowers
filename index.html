@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>For Sanjida | A Little Garden of Flowers</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --rose: #f39ab2;
+    --soft-rose: #f9c3d2;
+  }
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+    font-family: Georgia, "Times New Roman", serif;
+  }
+  canvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    cursor: pointer;
+  }
+  .dedication {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: clamp(24px, 6vh, 64px) 20px clamp(18px, 4vh, 40px);
+    box-sizing: border-box;
+    pointer-events: none;
+    text-align: center;
+    text-shadow: 0 2px 14px #000, 0 0 4px #000;
+  }
+  .dedication h1 {
+    margin: 0;
+    color: var(--soft-rose);
+    font-size: clamp(1.7rem, 4vw, 3.2rem);
+    font-weight: normal;
+    letter-spacing: 0.08em;
+  }
+  .dedication p {
+    margin: 0.45rem 0 0;
+    color: #f6e8ed;
+    font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+    letter-spacing: 0.04em;
+  }
+  .dedication .hint {
+    color: #d7bec7;
+    font-family: Menlo, Consolas, "DejaVu Sans Mono", monospace;
+    font-size: clamp(0.62rem, 1.2vw, 0.8rem);
+    letter-spacing: 0.03em;
+  }
+  .replay {
+    margin-top: 1rem;
+    padding: 0.55rem 1rem;
+    border: 1px solid rgba(249, 195, 210, 0.7);
+    border-radius: 999px;
+    color: var(--soft-rose);
+    background: rgba(30, 8, 18, 0.5);
+    font: inherit;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+  .replay:hover, .replay:focus-visible {
+    background: rgba(130, 35, 70, 0.45);
+    outline: none;
+  }
+</style>
+</head>
+<body>
+<canvas id="screen"></canvas>
+<main class="dedication" aria-label="A flower dedication for Sanjida">
+  <header>
+    <h1>For Sanjida</h1>
+    <p>A little garden blooming just for you ♡</p>
+  </header>
+  <footer>
+    <button class="replay" id="replay" type="button">Let it bloom again</button>
+    <p class="hint">click anywhere · press P for a new bouquet</p>
+  </footer>
+</main>
+<script src="bouquet.js"></script>
+</body>
+</html>
