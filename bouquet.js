@@ -542,7 +542,7 @@
     if (now - last < 1000 / FPS) return;
     last = now;
     T = (now - t0) / 1000;
-    proposal.classList.toggle('visible', T >= 10.5 && T < 16.5);
+    proposal.classList.toggle('visible', T >= 6 && T < 18);
     render(S, PALETTES[palette]);
   }
 
