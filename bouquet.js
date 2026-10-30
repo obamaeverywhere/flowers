@@ -339,9 +339,10 @@
     const W = b.width * (0.6 + 0.4 * grow) * (1 + 1.4 * open);
 
     g.save();
-    g.translate(x, y);
-    g.rotate(b.dir + b.droop * open);
-    g.scale(1, lerp(1, b.squash, open));
+    g.translate(x, y + deathProgress * 120);
+    g.rotate(b.dir + b.droop * open + deathProgress * (b.dir < 0 ? -1 : 1) * rad(75));
+    g.scale(1 - deathProgress * 0.18, lerp(1, b.squash, open) * (1 - deathProgress * 0.22));
+    g.globalAlpha = 1 - deathProgress * 0.35;
     // short green receptacle where the bud meets the pedicel
     g.fillStyle = '#5f9a34';
     g.beginPath(); g.ellipse(0, 0, 9, 7, 0, 0, Math.PI * 2); g.fill();
@@ -446,6 +447,8 @@
   }
 
   function drawScene(g, S, pal) {
+    g.save();
+    g.globalAlpha = 1 - deathProgress * 0.8;
     drawRuscus(g, S);
     drawGyp(g, S, false);
     for (const st of S.stems) strokeCurve(g, st.pts, 0, stemProgress(st), 9, '#5a9a30');
@@ -454,13 +457,15 @@
     const sorted = S.buds.slice().sort((a, b) => budState(a).open - budState(b).open || (a.openAt - b.openAt || 0));
     for (const b of sorted) drawBud(g, b, pal);
     drawGyp(g, S, true);
+    g.restore();
   }
 
   // ---------- ascii renderer ----------
   const screen = document.getElementById('screen');
   const sctx = screen.getContext('2d');
-  const replayButton = document.getElementById('replay');
-  const proposal = document.getElementById('proposal');
+  const proposalCard = document.getElementById('proposal-card');
+  const answerButtons = document.querySelectorAll('.answer');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const off = document.createElement('canvas');
   const octx = off.getContext('2d', { willReadFrequently: true });
 
@@ -534,6 +539,9 @@
   // ---------- loop ----------
   const S = buildScene();
   let palette = 0;
+  let deathStart = 0;
+  let liliesAreDying = false;
+  let deathProgress = 0;
   let t0 = performance.now();
   let last = 0;
 
@@ -541,18 +549,45 @@
     requestAnimationFrame(frame);
     if (now - last < 1000 / FPS) return;
     last = now;
-    T = (now - t0) / 1000;
-    proposal.classList.toggle('visible', T >= 6 && T < 18);
+    T = reducedMotion.matches ? 18 : (now - t0) / 1000;
+    deathProgress = liliesAreDying ? Math.min(1, (now - deathStart) / 3600) : 0;
+    const proposalVisible = T >= 14;
+    proposalCard.classList.toggle('visible', proposalVisible);
+    proposalCard.setAttribute('aria-hidden', String(!proposalVisible));
     render(S, PALETTES[palette]);
   }
 
   const replay = () => {
     t0 = performance.now();
-    proposal.classList.remove('visible');
+    liliesAreDying = false;
+    deathProgress = 0;
+    proposalCard.classList.remove('visible');
+    proposalCard.setAttribute('aria-hidden', 'true');
   };
+  function celebrate() {
+    for (let i = 0; i < 28; i++) {
+      const petal = document.createElement('span');
+      petal.className = 'petal';
+      petal.textContent = i % 3 ? '*' : '+';
+      petal.style.left = `${Math.random() * 100}vw`;
+      petal.style.setProperty('--drift', `${(Math.random() - 0.5) * 35}vw`);
+      petal.style.animationDelay = `${Math.random() * 0.8}s`;
+      document.body.appendChild(petal);
+      petal.addEventListener('animationend', () => petal.remove(), { once: true });
+    }
+  }
+  function wiltLilies() {
+    liliesAreDying = true;
+    deathStart = performance.now();
+    proposalCard.classList.remove('visible');
+    proposalCard.setAttribute('aria-hidden', 'true');
+  }
   window.addEventListener('resize', resize);
   screen.addEventListener('click', replay);
-  replayButton.addEventListener('click', replay);
+  answerButtons.forEach((button) => button.addEventListener('click', (event) => {
+    if (event.currentTarget.dataset.yes === '2') wiltLilies();
+    else celebrate();
+  }));
   window.addEventListener('keydown', (e) => {
     if (e.key === ' ' || e.key === 'r') replay();
     if (e.key === 'p' || e.key === 'c') { palette = (palette + 1) % PALETTES.length; replay(); }

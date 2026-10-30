@@ -30,7 +30,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: clamp(24px, 6vh, 64px) 20px clamp(18px, 4vh, 40px);
+    padding: clamp(20px, 5vh, 56px) 20px clamp(18px, 4vh, 40px);
     box-sizing: border-box;
     pointer-events: none;
     text-align: center;
@@ -39,7 +39,7 @@
   .dedication h1 {
     margin: 0;
     color: var(--soft-rose);
-    font-size: clamp(1.7rem, 4vw, 3.2rem);
+    font-size: clamp(1.45rem, 4vw, 3.2rem);
     font-weight: normal;
     letter-spacing: 0.06em;
   }
@@ -55,37 +55,64 @@
     font-size: clamp(0.62rem, 1.2vw, 0.8rem);
     letter-spacing: 0.03em;
   }
-  .proposal {
-    margin: 0.75rem 0 0;
-    min-height: 1.1em;
-    color: #f9c3d2;
-    font-family: Menlo, Consolas, "DejaVu Sans Mono", monospace;
-    font-size: clamp(0.58rem, 1.1vw, 0.72rem);
-    letter-spacing: 0.08em;
+  .proposal-card {
+    position: fixed;
+    left: 50%;
+    bottom: clamp(108px, 17vh, 165px);
+    width: min(90vw, 430px);
+    padding: 1rem 1rem 0.85rem;
+    box-sizing: border-box;
+    transform: translate(-50%, 18px) scale(0.96);
+    border: 1px solid rgba(249, 195, 210, 0.72);
+    border-radius: 18px;
+    background: rgba(16, 3, 10, 0.9);
+    box-shadow: 0 0 35px rgba(205, 62, 115, 0.2);
     opacity: 0;
-    padding: 0.35rem 0.7rem;
-    border: 1px solid rgba(249, 195, 210, 0.55);
-    border-radius: 999px;
-    background: rgba(25, 4, 14, 0.78);
-    transition: opacity 0.8s ease;
+    pointer-events: none;
+    transition: opacity 1s ease, transform 1s ease;
   }
-  .proposal.visible {
-    opacity: 0.9;
-  }
-  .replay {
-    margin-top: 1rem;
-    padding: 0.55rem 1rem;
-    border: 1px solid rgba(249, 195, 210, 0.7);
-    border-radius: 999px;
-    color: var(--soft-rose);
-    background: rgba(30, 8, 18, 0.5);
-    font: inherit;
-    cursor: pointer;
+  .proposal-card.visible {
+    transform: translate(-50%, 0) scale(1);
+    opacity: 1;
     pointer-events: auto;
   }
-  .replay:hover, .replay:focus-visible {
-    background: rgba(130, 35, 70, 0.45);
+  .proposal-card .question {
+    margin: 0.35rem 0 0.85rem;
+    color: #fff3f6;
+    font-size: clamp(1rem, 3vw, 1.35rem);
+  }
+  .answers {
+    display: flex;
+    justify-content: center;
+    gap: 0.65rem;
+  }
+  .answer {
+    border: 1px solid rgba(249, 195, 210, 0.75);
+    border-radius: 999px;
+    padding: 0.45rem 0.8rem;
+    color: #18040c;
+    background: #f9c3d2;
+    font: bold 0.78rem Menlo, Consolas, monospace;
+    cursor: pointer;
+  }
+  .answer:hover, .answer:focus-visible {
+    background: #fff;
     outline: none;
+  }
+  .petal {
+    position: fixed;
+    top: -2rem;
+    z-index: 3;
+    color: #f39ab2;
+    font: bold 1.1rem Georgia, serif;
+    pointer-events: none;
+    animation: fall 3.8s ease-in forwards;
+  }
+  @keyframes fall {
+    to { transform: translate3d(var(--drift), 110vh, 0) rotate(420deg); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   }
 </style>
 </head>
@@ -93,15 +120,16 @@
 <canvas id="screen"></canvas>
 <main class="dedication" aria-label="A romantic flower dedication">
   <header>
-    <h1>Sanjida, Where My Heart Blooms</h1>
-    <p>Every beautiful thing feels brighter with you ♡</p>
+    <h1>Lilies for you, Sanjida ♡</h1>
   </header>
-  <footer>
-    <button class="replay" id="replay" type="button">Let it bloom again</button>
-    <p class="proposal" id="proposal" aria-live="polite">marry me bitch</p>
-    <p class="hint">click anywhere · press P for a new bouquet</p>
-  </footer>
 </main>
+<section class="proposal-card" id="proposal-card" aria-live="polite" aria-hidden="true">
+  <p class="question">Sanjida, will you keep choosing me?</p>
+  <div class="answers">
+    <button class="answer" type="button" data-yes="1">YES, obviously</button>
+    <button class="answer" type="button" data-yes="2">I am a bitch</button>
+  </div>
+</section>
 <script src="bouquet.js"></script>
 </body>
 </html>
