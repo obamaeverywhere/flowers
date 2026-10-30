@@ -1,4 +1,4 @@
-// Sanjida's garden: the scene is painted with vector shapes onto a tiny offscreen
+// A garden made of light: the scene is painted with vector shapes onto a tiny offscreen
 // canvas (one pixel per character cell), then every pixel is redrawn as a
 // coloured ASCII glyph whose density follows the pixel's brightness.
 //
@@ -8,7 +8,7 @@
 (() => {
   'use strict';
 
-  const RAMP = ' .:-=+*cxoaX#%&@';
+  const RAMP = ' .,:;irsXA253hMHGS#9B&@';
   const WORLD_W = 1000;
   const WORLD_H = 1100;
   const FPS = 30;
@@ -460,6 +460,7 @@
   const screen = document.getElementById('screen');
   const sctx = screen.getContext('2d');
   const replayButton = document.getElementById('replay');
+  const proposal = document.getElementById('proposal');
   const off = document.createElement('canvas');
   const octx = off.getContext('2d', { willReadFrequently: true });
 
@@ -475,7 +476,7 @@
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     const w = window.innerWidth, h = window.innerHeight;
-    fontSize = clamp(Math.floor(Math.min(w / 100, h / 85)), 5, 11);
+    fontSize = clamp(Math.floor(Math.min(w / 125, h / 100)), 5, 10);
     sctx.font = `bold ${fontSize}px Menlo, Consolas, "DejaVu Sans Mono", monospace`;
     cellW = sctx.measureText('M').width || fontSize * 0.6;
     cellH = fontSize;
@@ -517,13 +518,13 @@
         const i = (y * cols + x) * 4;
         const r = data[i], g = data[i + 1], b = data[i + 2];
         const m = Math.max(r, g, b);
-        if (m < 14) continue;
+        if (m < 10) continue;
         const v = m / 255;
         // a little shimmer so the glyphs feel alive
         const h = ((x * 73856093) ^ (y * 19349663) ^ (flick * 83492791)) >>> 0;
         const j = h % 7 === 0 ? (h & 8 ? 1 : -1) : 0;
         const idx = clamp(Math.round(Math.pow(v, 0.7) * n) + j, 1, n);
-        const k = Math.min(1.25, (40 + 215 * v) / m);
+        const k = Math.min(1.35, (55 + 220 * v) / m);
         sctx.fillStyle = style(Math.min(255, (r * k) | 0) & 0xf8, Math.min(255, (g * k) | 0) & 0xf8, Math.min(255, (b * k) | 0) & 0xf8);
         sctx.fillText(RAMP[idx], x * cellW, y * cellH);
       }
@@ -541,10 +542,14 @@
     if (now - last < 1000 / FPS) return;
     last = now;
     T = (now - t0) / 1000;
+    proposal.classList.toggle('visible', T >= 10.5 && T < 16.5);
     render(S, PALETTES[palette]);
   }
 
-  const replay = () => { t0 = performance.now(); };
+  const replay = () => {
+    t0 = performance.now();
+    proposal.classList.remove('visible');
+  };
   window.addEventListener('resize', resize);
   screen.addEventListener('click', replay);
   replayButton.addEventListener('click', replay);

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>For Sanjida | A Little Garden of Flowers</title>
+<title>A Garden Made of Light</title>
 <style>
   :root {
     color-scheme: dark;
@@ -41,7 +41,7 @@
     color: var(--soft-rose);
     font-size: clamp(1.7rem, 4vw, 3.2rem);
     font-weight: normal;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
   }
   .dedication p {
     margin: 0.45rem 0 0;
@@ -54,6 +54,19 @@
     font-family: Menlo, Consolas, "DejaVu Sans Mono", monospace;
     font-size: clamp(0.62rem, 1.2vw, 0.8rem);
     letter-spacing: 0.03em;
+  }
+  .proposal {
+    margin: 0.75rem 0 0;
+    min-height: 1.1em;
+    color: #f9c3d2;
+    font-family: Menlo, Consolas, "DejaVu Sans Mono", monospace;
+    font-size: clamp(0.58rem, 1.1vw, 0.72rem);
+    letter-spacing: 0.08em;
+    opacity: 0;
+    transition: opacity 1.4s ease;
+  }
+  .proposal.visible {
+    opacity: 0.9;
   }
   .replay {
     margin-top: 1rem;
@@ -74,13 +87,14 @@
 </head>
 <body>
 <canvas id="screen"></canvas>
-<main class="dedication" aria-label="A flower dedication for Sanjida">
+<main class="dedication" aria-label="A romantic flower dedication">
   <header>
-    <h1>For Sanjida</h1>
-    <p>A little garden blooming just for you ♡</p>
+    <h1>Where My Heart Blooms</h1>
+    <p>Every beautiful thing feels brighter with you ♡</p>
   </header>
   <footer>
     <button class="replay" id="replay" type="button">Let it bloom again</button>
+    <p class="proposal" id="proposal" aria-live="polite">marry me bitch</p>
     <p class="hint">click anywhere · press P for a new bouquet</p>
   </footer>
 </main>
